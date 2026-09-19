@@ -12,6 +12,7 @@ import {
   Target,
   Eye
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 export default function InterviewPanel({
   jobId,
@@ -34,7 +35,7 @@ export default function InterviewPanel({
       if (jobId) params.set('job_id', jobId);
       if (candidateId) params.set('candidate_id', candidateId);
 
-      const res = await fetch(`/api/interviews?${params}`, {
+      const res = await fetch(apiUrl(`/api/interviews?${params}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -58,7 +59,7 @@ export default function InterviewPanel({
     setPreparing(true);
     setError(null);
     try {
-      const res = await fetch('/api/interviews/prepare', {
+      const res = await fetch(apiUrl('/api/interviews/prepare'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

@@ -27,6 +27,7 @@ import {
   ArrowRight,
   Lock
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 export default function CandidateDetailModal({ isOpen, onClose, candidate, onCandidateUpdated, token }) {
   const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'evaluation'
@@ -83,7 +84,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
     if (!candidate?.id || !token) return;
     setLoadingEvidence(true);
     try {
-      const res = await fetch(`/api/candidates/${candidate.id}/evidence`, {
+      const res = await fetch(apiUrl(`/api/candidates/${candidate.id}/evidence`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -105,7 +106,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
 
     try {
       // Fetch interviews to find one for this candidate
-      const res = await fetch('/api/interviews', {
+      const res = await fetch(apiUrl('/api/interviews'), {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -115,7 +116,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
         if (candInterview) {
           setInterviewId(candInterview.id);
           // Fetch evaluation for this interview
-          const evalRes = await fetch(`/api/interviews/${candInterview.id}/evaluation`, {
+          const evalRes = await fetch(apiUrl(`/api/interviews/${candInterview.id}/evaluation`), {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (evalRes.ok) {
@@ -141,7 +142,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
       return;
     }
     try {
-      const res = await fetch(`/api/candidates/${candidate.id}/masked-profile`, {
+      const res = await fetch(apiUrl(`/api/candidates/${candidate.id}/masked-profile`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -162,7 +163,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
         ? `/api/candidates/${candidate.id}/parse-resume?resume_id=${resumeId}`
         : `/api/candidates/${candidate.id}/parse-resume`;
       
-      const res = await fetch(url, {
+      const res = await fetch(apiUrl(url), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -173,7 +174,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
       }
 
       // Re-fetch updated candidate details
-      const candRes = await fetch(`/api/candidates/${candidate.id}`, {
+      const candRes = await fetch(apiUrl(`/api/candidates/${candidate.id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (candRes.ok) {
@@ -204,7 +205,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
         github_url: githubUrl.trim() || null,
       };
 
-      const res = await fetch(`/api/candidates/${candidate.id}`, {
+      const res = await fetch(apiUrl(`/api/candidates/${candidate.id}`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +236,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
     setError(null);
 
     try {
-      const res = await fetch(`/api/interviews/${interviewId}/evaluation/decision`, {
+      const res = await fetch(apiUrl(`/api/interviews/${interviewId}/evaluation/decision`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -257,7 +258,7 @@ export default function CandidateDetailModal({ isOpen, onClose, candidate, onCan
       setDecisionSuccess(`Human decision recorded: ${decisionAction.toUpperCase()}`);
 
       // Re-fetch candidate to reflect updated pipeline stage
-      const candRes = await fetch(`/api/candidates/${candidate.id}`, {
+      const candRes = await fetch(apiUrl(`/api/candidates/${candidate.id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (candRes.ok) {

@@ -24,6 +24,7 @@ import {
   FileText,
   MessageSquare
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const STATUS_COLORS = {
   active: 'bg-status-success/15 border-status-success/30 text-status-success',
@@ -60,7 +61,7 @@ export default function JobDetailView({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/jobs/${jobId}`, {
+      const res = await fetch(apiUrl(`/api/jobs/${jobId}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) {
@@ -70,7 +71,7 @@ export default function JobDetailView({
       setJob(data);
 
       // Fetch candidates for this job
-      const candRes = await fetch(`/api/candidates?job_id=${jobId}`, {
+      const candRes = await fetch(apiUrl(`/api/candidates?job_id=${jobId}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (candRes.ok) {
@@ -89,7 +90,7 @@ export default function JobDetailView({
 
   const fetchMatchResults = async () => {
     try {
-      const res = await fetch(`/api/matching/${jobId}/results`, {
+      const res = await fetch(apiUrl(`/api/matching/${jobId}/results`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -110,7 +111,7 @@ export default function JobDetailView({
   const handleStatusChange = async (newStatus) => {
     setUpdatingStatus(true);
     try {
-      const res = await fetch(`/api/jobs/${jobId}/status`, {
+      const res = await fetch(apiUrl(`/api/jobs/${jobId}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +134,7 @@ export default function JobDetailView({
     setCriteriaError(null);
     setIsExtractingCriteria(true);
     try {
-      const res = await fetch(`/api/jobs/${jobId}/parse-jd`, {
+      const res = await fetch(apiUrl(`/api/jobs/${jobId}/parse-jd`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -153,7 +154,7 @@ export default function JobDetailView({
     setMatchError(null);
     setIsRunningMatching(true);
     try {
-      const res = await fetch(`/api/matching/${jobId}/run`, {
+      const res = await fetch(apiUrl(`/api/matching/${jobId}/run`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -164,7 +165,7 @@ export default function JobDetailView({
       const data = await res.json();
       setMatchResults(data.matches || []);
       // Refresh candidates to sync pipeline stages
-      const candRes = await fetch(`/api/candidates?job_id=${jobId}`, {
+      const candRes = await fetch(apiUrl(`/api/candidates?job_id=${jobId}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (candRes.ok) {
@@ -185,7 +186,7 @@ export default function JobDetailView({
   const handlePrepareInterview = async (match) => {
     setPreparingInterviewFor(match.match_id);
     try {
-      const res = await fetch('/api/interviews/prepare', {
+      const res = await fetch(apiUrl('/api/interviews/prepare'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

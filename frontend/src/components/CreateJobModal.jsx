@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Briefcase, Plus, Trash2, AlertCircle, Loader2 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 export default function CreateJobModal({ isOpen, onClose, onJobCreated, token }) {
   const [title, setTitle] = useState('');
@@ -55,7 +56,7 @@ export default function CreateJobModal({ isOpen, onClose, onJobCreated, token })
           weight: Number(r.weight) || 1.0,
         }));
 
-      const res = await fetch('/api/jobs', {
+      const res = await fetch(apiUrl('/api/jobs'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

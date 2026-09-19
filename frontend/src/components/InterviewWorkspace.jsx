@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Play
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const CATEGORY_META = {
   technical_depth: { label: 'Technical Depth', icon: Brain, color: 'brand-cyan' },
@@ -47,7 +48,7 @@ export default function InterviewWorkspace({ interviewId, onBack, token }) {
   const fetchInterview = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/interviews/${interviewId}`, {
+      const res = await fetch(apiUrl(`/api/interviews/${interviewId}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to load interview');
@@ -108,7 +109,7 @@ export default function InterviewWorkspace({ interviewId, onBack, token }) {
     setTurnHistory(prev => [...prev, { type: 'answer', data: { transcript_text: inputText, attempt_number: 1 } }]);
 
     try {
-      const res = await fetch(`/api/interviews/${interviewId}/turn`, {
+      const res = await fetch(apiUrl(`/api/interviews/${interviewId}/turn`), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

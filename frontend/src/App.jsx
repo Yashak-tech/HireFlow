@@ -27,6 +27,7 @@ import CandidateDetailModal from './components/CandidateDetailModal';
 import InterviewWorkspace from './components/InterviewWorkspace';
 import InterviewListView from './components/InterviewListView';
 import AuditDashboard from './components/AuditDashboard';
+import { apiUrl } from './api';
 
 export default function App() {
   const [health, setHealth] = useState(null);
@@ -68,7 +69,7 @@ export default function App() {
 
   useEffect(() => {
     // Health probe
-    fetch('/api/health')
+    fetch(apiUrl('/api/health'))
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         setHealth(data);
@@ -79,7 +80,7 @@ export default function App() {
     // Restore saved token
     const savedToken = localStorage.getItem('hireflow_token');
     if (savedToken) {
-      fetch('/api/auth/me', {
+      fetch(apiUrl('/api/auth/me'), {
         headers: { Authorization: `Bearer ${savedToken}` },
       })
         .then((res) => (res.ok ? res.json() : null))
@@ -103,7 +104,7 @@ export default function App() {
     if (!authData?.access_token) return;
     setLoadingJobs(true);
     try {
-      const res = await fetch('/api/jobs', {
+      const res = await fetch(apiUrl('/api/jobs'), {
         headers: { Authorization: `Bearer ${authData.access_token}` },
       });
       if (res.ok) {
@@ -121,7 +122,7 @@ export default function App() {
     if (!authData?.access_token) return;
     setLoadingCandidates(true);
     try {
-      const res = await fetch('/api/candidates', {
+      const res = await fetch(apiUrl('/api/candidates'), {
         headers: { Authorization: `Bearer ${authData.access_token}` },
       });
       if (res.ok) {
@@ -147,7 +148,7 @@ export default function App() {
     setAuthError(null);
 
     try {
-      const res = await fetch('/api/auth/demo-login', {
+      const res = await fetch(apiUrl('/api/auth/demo-login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ persona }),
@@ -184,7 +185,7 @@ export default function App() {
     if (!authData?.access_token) return;
     setSeedingDemo(true);
     try {
-      const res = await fetch('/api/demo/seed', {
+      const res = await fetch(apiUrl('/api/demo/seed'), {
         method: 'POST',
         headers: { Authorization: `Bearer ${authData.access_token}` },
       });

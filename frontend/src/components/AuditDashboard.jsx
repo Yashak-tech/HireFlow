@@ -16,6 +16,7 @@ import {
   FileCode,
   Tag
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const ACTION_COLORS = {
   job_created: 'bg-brand-cyan/15 text-brand-cyan border-brand-cyan/30',
@@ -62,7 +63,7 @@ export default function AuditDashboard({ token }) {
     else setLoading(true);
 
     try {
-      let url = '/api/audit?limit=200';
+      let url = apiUrl('/api/audit?limit=200');
       if (actionFilter !== 'all') url += `&action=${encodeURIComponent(actionFilter)}`;
       if (entityFilter !== 'all') url += `&entity_type=${encodeURIComponent(entityFilter)}`;
 

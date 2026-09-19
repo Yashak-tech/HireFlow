@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Sparkles
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const STATUS_COLORS = {
   active: 'bg-status-success/15 border-status-success/30 text-status-success',
@@ -37,7 +38,7 @@ export default function JobsView({
   useEffect(() => {
     if (!token) return;
     setLoadingStats(true);
-    fetch('/api/stats/dashboard', {
+    fetch(apiUrl('/api/stats/dashboard'), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => (res.ok ? res.json() : null))

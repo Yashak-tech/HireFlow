@@ -11,6 +11,7 @@ import {
   Users,
   Briefcase
 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 export default function InterviewListView({ token, onSelectInterview }) {
   const [interviews, setInterviews] = useState([]);
@@ -19,7 +20,7 @@ export default function InterviewListView({ token, onSelectInterview }) {
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
-        const res = await fetch('/api/interviews', {
+        const res = await fetch(apiUrl('/api/interviews'), {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {

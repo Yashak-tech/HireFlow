@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 export default function CreateCandidateModal({ isOpen, onClose, onCandidateCreated, jobs, defaultJobId, token }) {
   const [fullName, setFullName] = useState('');
@@ -60,7 +61,7 @@ export default function CreateCandidateModal({ isOpen, onClose, onCandidateCreat
         skills: parsedSkills,
       };
 
-      const res = await fetch('/api/candidates', {
+      const res = await fetch(apiUrl('/api/candidates'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

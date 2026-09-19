@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { X, UploadCloud, FileText, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { apiUrl } from '../api';
 
 const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.txt'];
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
@@ -88,7 +89,7 @@ export default function UploadResumeModal({ isOpen, onClose, onUploaded, jobs, d
       if (email.trim()) formData.append('email', email.trim());
       if (selectedJobId) formData.append('job_id', selectedJobId);
 
-      const res = await fetch('/api/candidates/upload', {
+      const res = await fetch(apiUrl('/api/candidates/upload'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
