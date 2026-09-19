@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     PORT: int = 8000
     HOST: str = "0.0.0.0"
-    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
+    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,https://hire-flow-nu-blush.vercel.app"
     SECRET_KEY: str = "hireflow-hackathon-insecure-dev-secret-change-in-prod"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
@@ -45,7 +45,15 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> List[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        raw = self.CORS_ORIGINS
+        if not raw:
+            return []
+        origins = []
+        for origin in raw.split(","):
+            cleaned = origin.strip().strip("\"'").rstrip("/")
+            if cleaned:
+                origins.append(cleaned)
+        return origins
 
     @property
     def async_database_url(self) -> str:
