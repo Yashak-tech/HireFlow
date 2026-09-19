@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  hireflow-db:
+    image: pgvector/pgvector:pg16
+    container_name: hireflow-db
+    environment:
+      POSTGRES_DB: hireflow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - hireflow_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d hireflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  hireflow-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hireflow-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - PORT=8000
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://postgres:postgrespassword@hireflow-db:5432/hireflow
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+    depends_on:
+      hireflow-db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/uploads
+
+  hireflow-web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hireflow-web
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - hireflow-api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  hireflow_pgdata:
